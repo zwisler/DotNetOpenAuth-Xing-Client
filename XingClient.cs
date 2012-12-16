@@ -1,5 +1,4 @@
 
-
 namespace DotNetOpenAuth.ApplicationBlock {
 	using System;
 	using System.Collections.Generic;
@@ -105,7 +104,7 @@ namespace DotNetOpenAuth.ApplicationBlock {
 		/// <param name="maxResults">The maximum number of entries to return. If you want to receive all of the contacts, rather than only the default maximum, you can specify a very large number here.</param>
 		/// <param name="startIndex">The 1-based index of the first result to be retrieved (for paging).</param>
 		/// <returns>json eturns>
-         public static Object GetMyCotacts(ConsumerBase consumer, string accessToken, string felds, int maxResults/* = 25*/, int startIndex/* = 1*/)
+         public static Object GetMyContacts(ConsumerBase consumer, string accessToken, string felds, int maxResults/* = 25*/, int startIndex/* = 1*/)
         {
             if (consumer == null)
             {
