@@ -1,8 +1,4 @@
-//-----------------------------------------------------------------------
-// <copyright file="XingClient  company="Citaurus">
-//     Copyright (c) Citaurus Foundation. All rights reserved.
-// </copyright>
-//-----------------------------------------------------------------------
+
 
 namespace DotNetOpenAuth.ApplicationBlock {
 	using System;
