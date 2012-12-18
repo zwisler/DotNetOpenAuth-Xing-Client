@@ -29,8 +29,8 @@
                 var tokenManager = (InMemoryTokenManager)Application["XingTokenManager"];
                 if (tokenManager == null)
                 {
-                    string consumerKey = "08c61964c9b6fb709394"; //ConfigurationManager.AppSettings["googleConsumerKey"];
-                    string consumerSecret = "f4741103c52c7cae5ccda087d528117a50034305"; // ConfigurationManager.AppSettings["googleConsumerSecret"];
+                    string consumerKey = "key"; //ConfigurationManager.AppSettings["googleConsumerKey"];
+                    string consumerSecret = "secret"; // ConfigurationManager.AppSettings["googleConsumerSecret"];
                     if (!string.IsNullOrEmpty(consumerKey))
                     {
                         tokenManager = new InMemoryTokenManager(consumerKey, consumerSecret);
