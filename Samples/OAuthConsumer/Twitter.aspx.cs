@@ -22,8 +22,8 @@
 			get {
 				var tokenManager = (InMemoryTokenManager)Application["TwitterTokenManager"];
 				if (tokenManager == null) {
-                    string consumerKey = ConfigurationManager.AppSettings["pGzQZUMsrX8wsRjXCO6w"];
-					string consumerSecret = ConfigurationManager.AppSettings["nKXPpiyuh1zUxKkvLpnsyEgUnRwsLKyP1hppYhBHRyY"];
+                    string consumerKey = ConfigurationManager.AppSettings["key"];
+					string consumerSecret = ConfigurationManager.AppSettings["token"];
 					if (!string.IsNullOrEmpty(consumerKey)) {
 						tokenManager = new InMemoryTokenManager(consumerKey, consumerSecret);
 						Application["TwitterTokenManager"] = tokenManager;
