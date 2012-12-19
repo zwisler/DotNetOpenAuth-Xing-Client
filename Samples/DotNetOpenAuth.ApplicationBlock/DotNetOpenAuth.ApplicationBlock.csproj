@@ -96,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicJsonConverter.cs" />
+    <Compile Include="JsonWebToken.cs" />
     <Compile Include="XingClient.cs" />
     <Compile Include="CustomExtensions\Acme.cs" />
     <Compile Include="CustomExtensions\AcmeRequest.cs" />

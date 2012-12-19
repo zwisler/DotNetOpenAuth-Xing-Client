@@ -9,6 +9,7 @@
     <li><a href="Xing.aspx">Xing</a></li>
 		<li><a href="GoogleAddressBook.aspx">Download your Gmail address book</a></li>
 		<li><a href="Twitter.aspx">Get your Twitter updates</a></li>
-		<li><a href="SignInWithTwitter.aspx">Sign In With Twitter</a></li>		
+		<li><a href="SignInWithTwitter.aspx">Sign In With Twitter</a></li>
+        <li><a href="default.html">live</a></li>		
 	</ul>
 </asp:Content>

@@ -44,7 +44,8 @@ namespace DotNetOpenAuth.ApplicationBlock
         /// A mapping between Google's applications and their URI scope values.
         /// </summary>
         private static readonly Dictionary<Applications, string> DataScopeUris = new Dictionary<Applications, string> {
-			{ Applications.me, "https://api.xing.com/v1/users/me" },
+			{ Applications.Contacts, "https://api.xing.com/v1/users/me/contacts" },
+            { Applications.me, "https://api.xing.com/v1/users/me" },
 			{ Applications.users, "https://api.xing.com/v1/users/" },
 			
 		};
@@ -65,7 +66,10 @@ namespace DotNetOpenAuth.ApplicationBlock
         [Flags]
         public enum Applications : long
         {
-          
+            /// <summary>
+            /// The Gmail address book.
+            /// </summary>
+            Contacts = 0x1,
 
             /// <summary>
             /// Abot me

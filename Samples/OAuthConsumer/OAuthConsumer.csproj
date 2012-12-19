@@ -74,7 +74,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Callback.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="default.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="GoogleAddressBook.aspx" />
@@ -106,6 +108,10 @@
     <Compile Include="..\DotNetOpenAuth.ApplicationBlock\InMemoryTokenManager.cs">
       <Link>Code\InMemoryTokenManager.cs</Link>
     </Compile>
+    <Compile Include="Callback.aspx.cs">
+      <DependentUpon>Callback.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -119,6 +125,10 @@
     <Compile Include="GoogleApps2Legged.aspx.designer.cs">
       <DependentUpon>GoogleApps2Legged.aspx</DependentUpon>
     </Compile>
+    <Compile Include="NewFolder1\JsonWebToken.cs" />
+    <Compile Include="NewFolder1\OAuthConstants.cs" />
+    <Compile Include="NewFolder1\OAuthError.cs" />
+    <Compile Include="NewFolder1\OAuthToken.cs" />
     <Compile Include="Service References\SampleServiceProvider\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
