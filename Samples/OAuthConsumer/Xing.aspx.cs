@@ -29,14 +29,15 @@
                 var tokenManager = (InMemoryTokenManager)Application["XingTokenManager"];
                 if (tokenManager == null)
                 {
-                    string consumerKey = "key"; //ConfigurationManager.AppSettings["googleConsumerKey"];
-                    string consumerSecret = "secret"; // ConfigurationManager.AppSettings["googleConsumerSecret"];
+                    string consumerKey = "consumerKey"; 
+                    string consumerSecret = "consumerSecret"; 
                     if (!string.IsNullOrEmpty(consumerKey))
                     {
                         tokenManager = new InMemoryTokenManager(consumerKey, consumerSecret);
                         Application["XingTokenManager"] = tokenManager;
                     }
                 }
+
                 return tokenManager;
             }
         }
@@ -63,7 +64,7 @@
                         string first_name = result.first_name;
                         string last_name = result.last_name;
                         string picurl = result.photo_urls.maxi_thumb;
-                        dynamic result2 = XingClient.GetMyCotacts(xing, this.AccessToken, "display_name", 50, 0);
+                        dynamic result2 = XingClient.GetMyContacts(xing, this.AccessToken, "display_name", 50, 0);
                         dynamic a = result2.contacts;
                         int b = a.total;
                         dynamic c = a.users;
@@ -78,18 +79,45 @@
                         string mail = result3.active_email;
                         dynamic result5 = XingClient.GetUser(xing, this.AccessToken, c[12].id);
                         string url = XingClient.GetScopeUri(XingClient.Applications.me);
+                        bool result6 = XingClient.PostStatus(xing, this.AccessToken, "Hura fertig!!! ", id);
+                        
+                        
+                        
+                        
                         //Response.Redirect("/#/Home"); 
 
                     }
                     else if (this.AccessToken == null)
                     {
                         // If we don't yet have access, immediately request it.
-                        XingClient.RequestAuthorization(xing, XingClient.Applications.me);
+                        XingClient.RequestAuthorization(xing, XingClient.Applications.Contacts);
                     }
                 }
             }
         }
 
-        
+        protected void getAddressBookButton_Click(object sender, EventArgs e)
+        {
+
+
+            // XDocument contactsDocument = XingConsumer.GetContacts(google, this.AccessToken, 100, 1);
+            //var contacts = from entry in contactsDocument.Root.Elements(XName.Get("entry", "http://www.w3.org/2005/Atom"))
+            //               select new
+            //               {
+            //                   Name = entry.Element(XName.Get("title", "http://www.w3.org/2005/Atom")).Value,
+            //                   Email =  entry.Element(XName.Get("email", "http://schemas.google.com/g/2005")) != null ? entry.Element(XName.Get("email", "http://schemas.google.com/g/2005")).Attribute("address").Value  : "no Mail"
+            //                   //Email = entry.Element(XName.Get("email", "http://schemas.google.com/g/2005")).Attribute("address").Value  ?? ""
+            //               };
+            //StringBuilder tableBuilder = new StringBuilder();
+            //tableBuilder.Append("<table><tr><td>Name</td><td>Email</td></tr>");
+            //foreach (var contact in contacts) {
+            //    tableBuilder.AppendFormat(
+            //        "<tr><td>{0}</td><td>{1}</td></tr>",
+            //        HttpUtility.HtmlEncode(contact.Name),
+            //        HttpUtility.HtmlEncode(contact.Email));
+            //}
+            //tableBuilder.Append("</table>");
+
+        }
     }
 }

@@ -96,13 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DynamicJsonConverter.cs" />
-    <Compile Include="JsonWebToken.cs" />
     <Compile Include="XingClient.cs" />
     <Compile Include="CustomExtensions\Acme.cs" />
     <Compile Include="CustomExtensions\AcmeRequest.cs" />
     <Compile Include="CustomExtensions\AcmeResponse.cs" />
-    <Compile Include="Facebook\FacebookClient.cs" />
-    <Compile Include="Facebook\FacebookGraph.cs" />
     <Compile Include="CustomExtensions\UIRequestAtRelyingPartyFactory.cs" />
     <Compile Include="GoogleConsumer.cs" />
     <Compile Include="InMemoryClientAuthorizationTracker.cs" />

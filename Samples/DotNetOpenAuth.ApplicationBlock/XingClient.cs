@@ -56,6 +56,11 @@ namespace DotNetOpenAuth.ApplicationBlock
         private static readonly MessageReceivingEndpoint GetContactsEndpoint = new MessageReceivingEndpoint("https://api.xing.com/v1/users/me/contacts", HttpDeliveryMethods.GetRequest);
 
         /// <summary>
+        /// The URI to get contacts once authorization is granted.
+        /// </summary>
+        private static readonly MessageReceivingEndpoint PutContactsEndpoint = new MessageReceivingEndpoint("https://api.xing.com/v1/users/me/contacts", HttpDeliveryMethods.GetRequest);
+
+        /// <summary>
         /// The URI to get me one authorization is granted.
         /// </summary>
         private static readonly MessageReceivingEndpoint GetMeEndpoint = new MessageReceivingEndpoint("https://api.xing.com/v1/users/me/", HttpDeliveryMethods.GetRequest);
@@ -154,7 +159,7 @@ namespace DotNetOpenAuth.ApplicationBlock
         /// <param name="startIndex">The 1-based index of the first result to be retrieved (for paging).</param>
         /// <param name="field">user_fields of info on https://dev.xing.com/docs/get/users/:id </param>
         /// <returns>An dynamic Object returned by Xing.</returns>
-        public static Object GetMyCotacts(ConsumerBase consumer, string accessToken, string field, int maxResults/* = 25*/, int startIndex/* = 1*/)
+        public static Object GetMyContacts(ConsumerBase consumer, string accessToken, string field, int maxResults/* = 25*/, int startIndex/* = 1*/)
         {
             if (consumer == null)
             {
@@ -166,8 +171,7 @@ namespace DotNetOpenAuth.ApplicationBlock
                 { "user_fields",field },
 			};
             var request = consumer.PrepareAuthorizedRequest(GetContactsEndpoint, accessToken, extraData);
-
-            // Enable gzip compression.  Google only compresses the response for recognized user agent headers. - Mike Lim
+          
             //request.AutomaticDecompression = DecompressionMethods.GZip;
             request.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.151 Safari/534.16";
             var response = consumer.Channel.WebRequestHandler.GetResponse(request);
@@ -177,6 +181,7 @@ namespace DotNetOpenAuth.ApplicationBlock
             dynamic obj = serializer.Deserialize(body, typeof(object));
             return obj;
         }
+        
 
         /// <summary>
         /// Gets a Xing user contents.
@@ -265,61 +270,69 @@ namespace DotNetOpenAuth.ApplicationBlock
             return obj.users[0];
         }
 
-
-        public static void PostBlogEntry(ConsumerBase consumer, string accessToken, string blogUrl, string title, XElement body)
+        /// <summary>
+        /// Post a Status Messages.
+        /// </summary>
+        /// <param name="consumer">The Xing consumer.</param>
+        /// <param name="accessToken">The access token previously retrieved.</param>
+        /// <param name="message">The new status update. The maximum length is 420 characters.</param>       
+        ///  <param name="user_id">ID of the user starting the conversation.</param>
+        /// <returns>An dynamic Object returned by Xing.</returns>
+        public static bool PostStatus(ConsumerBase consumer, string accessToken, string message,  string user_id)
         {
-            string feedUrl;
-            var getBlogHome = WebRequest.Create(blogUrl);
-            using (var blogHomeResponse = getBlogHome.GetResponse())
+            if (consumer == null)
             {
-                using (StreamReader sr = new StreamReader(blogHomeResponse.GetResponseStream()))
-                {
-                    string homePageHtml = sr.ReadToEnd();
-                    Match m = Regex.Match(homePageHtml, @"http://www.blogger.com/feeds/\d+/posts/default");
-                    Debug.Assert(m.Success, "Posting operation failed.");
-                    feedUrl = m.Value;
-                }
+                throw new ArgumentNullException("consumer");
             }
-            const string Atom = "http://www.w3.org/2005/Atom";
-            XElement entry = new XElement(
-                XName.Get("entry", Atom),
-                new XElement(XName.Get("title", Atom), new XAttribute("type", "text"), title),
-                new XElement(XName.Get("content", Atom), new XAttribute("type", "xhtml"), body),
-                new XElement(XName.Get("category", Atom), new XAttribute("scheme", "http://www.blogger.com/atom/ns#"), new XAttribute("term", "oauthdemo")));
-
-            MemoryStream ms = new MemoryStream();
-            XmlWriterSettings xws = new XmlWriterSettings()
-            {
-                Encoding = Encoding.UTF8,
-            };
-            XmlWriter xw = XmlWriter.Create(ms, xws);
-            entry.WriteTo(xw);
-            xw.Flush();
-
-            WebRequest request = consumer.PrepareAuthorizedRequest(new MessageReceivingEndpoint(feedUrl, HttpDeliveryMethods.PostRequest | HttpDeliveryMethods.AuthorizationHeaderRequest), accessToken);
-            request.ContentType = "application/atom+xml";
-            request.Method = "POST";
-            request.ContentLength = ms.Length;
-            ms.Seek(0, SeekOrigin.Begin);
-            using (Stream requestStream = request.GetRequestStream())
-            {
-                ms.CopyTo(requestStream);
-            }
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                if (response.StatusCode == HttpStatusCode.Created)
-                {
-                    // Success
-                }
-                else
-                {
-                    // Error!
-                }
-            }
+            var extraData = new Dictionary<string, string>() {
+				{ "message", message },				              
+			};
+            MessageReceivingEndpoint Endpoint = new MessageReceivingEndpoint("https://api.xing.com/v1/users/" + user_id + "/status_message", HttpDeliveryMethods.PostRequest);
+            var request = consumer.PrepareAuthorizedRequest(Endpoint, accessToken, extraData);
+            //request.AutomaticDecompression = DecompressionMethods.GZip;
+            request.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.151 Safari/534.16";
+            var response = consumer.Channel.WebRequestHandler.GetResponse(request);
+            string body = response.GetResponseReader().ReadToEnd();
+            if (body.Contains("has been posted")) return true;
+            else return false;           
         }
 
         /// <summary>
-        /// Gets the scope URI in Google's format.
+        /// Post a Conversation.
+        /// </summary>
+        /// <param name="consumer">The Xing consumer.</param>
+        /// <param name="accessToken">The access token previously retrieved.</param>
+        /// <param name="content">Message text. Max. size is 16384 UTF-8 characters.</param>
+        /// <param name="recipient_ids">Comma-separated list of recipients. There must be at least one recipient. Sender cannot be included.</param>
+        ///  <param name="subject">Subject for conversation. Max. size is 32 UTF-8 characters</param>
+        ///  <param name="user_id">ID of the user starting the conversation.</param>
+        /// <returns>An dynamic Object returned by Xing.</returns> 
+        public static Object PostConversation(ConsumerBase consumer, string accessToken, string content, string recipient_ids, string subject, string user_id)
+        {
+            if (consumer == null)
+            {
+                throw new ArgumentNullException("consumer");
+            }
+            var extraData = new Dictionary<string, string>() {
+				{ "content", content },
+				{ "recipient_ids", recipient_ids },
+                { "subject", subject },               
+			};
+            MessageReceivingEndpoint Endpoint = new MessageReceivingEndpoint("https://api.xing.com/v1/users/" + user_id + "/conversations", HttpDeliveryMethods.PostRequest);
+            var request = consumer.PrepareAuthorizedRequest(Endpoint, accessToken, extraData);
+
+            //request.AutomaticDecompression = DecompressionMethods.GZip;
+            request.UserAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.151 Safari/534.16";
+            var response = consumer.Channel.WebRequestHandler.GetResponse(request);
+            string body = response.GetResponseReader().ReadToEnd();
+            var serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(new[] { new DynamicJsonConverter() });
+            dynamic obj = serializer.Deserialize(body, typeof(object));
+            return obj;
+        }      
+
+        /// <summary>
+        /// Gets the scope URI in Xing's format.
         /// </summary>
         /// <param name="scope">The scope, which may include one or several Google applications.</param>
         /// <returns>A space-delimited list of URIs for the requested Google applications.</returns>
