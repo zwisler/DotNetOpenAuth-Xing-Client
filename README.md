@@ -3,6 +3,7 @@ DotNetOpenAuth-Xing-Client
 
 DotNetOpenAuth Xing Client
 example Code:
+{
 using System;
     using System.Configuration;
     using System.Linq;
@@ -100,3 +101,4 @@ using System;
                 }
             }
         }
+}
