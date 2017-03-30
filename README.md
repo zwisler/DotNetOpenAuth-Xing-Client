@@ -8,6 +8,15 @@ This site was built using [GitHub Pages](https://pages.github.com/).
 @test
 @github/support What do you think about these updates?
 
+<pre style="font-size:157%">
+[BROADCAST_RECEIVER_RULES]
+RULE0 = *;/euro_essernet/c20
+RULE1 = 
+</pre>
+
+# one #
+DotNetOpenAuth-Xing-Client
+=
 1. Make my changes
   1. Fix bug
   2. Improve formatting
